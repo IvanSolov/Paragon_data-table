@@ -1,37 +1,54 @@
-import type { ProductsServerResponse } from '@/types/api/product';
 import { httpClient } from '../httpClient';
 
 type FetchParams = {
   search?: string;
   page?: number;
   limit?: number;
+}
+
+export type ProductServerType = {
+  id: number;
+  title: string;
+  description: string;
+  price: number;
+};
+
+export type ProductsServerResponse = {
+  products: ProductServerType[];
+  total: number;
+  skip: number;
+  limit: number;
 };
 
 export const fetchProducts = async ({
-  search = '',
+  search,
   page = 1,
-  limit = 10
-}: FetchParams = {}): Promise<ProductsServerResponse[]> => {
+  limit = 100
+}: FetchParams): Promise<ProductsServerResponse> => {
   try {
-    const response = await httpClient.get<ProductsServerResponse[]>('/products', {
+    const { data } = await httpClient.get('/products', {
       params: {
         q: search,
         limit,
         skip: (page - 1) * limit
       }
     });
-
-    return response.data;
+    return {
+      products: data?.products || [],
+      total: data?.total || 0,
+      skip: data?.skip || false,
+      limit: data?.limit || 100
+    };
   } catch (error) {
     throw new Error(`Failed to fetch products: ${error}`);
   }
 };
 
-// export const fetchProductById = async (id: number): Promise<Product> => {
-//   try {
-//     const response = await httpClient.get<Product>(`/products/${id}`);
-//     return response.data;
-//   } catch (error) {
-//     throw new Error(`Failed to fetch product by id ${id}: ${error}`);
-//   }
-// };
+export const fetchProductById = async (id: number): Promise<ProductServerType> => {
+  try {
+    const response = await httpClient.get(`/products/${id}`);
+    return response.data;
+  } catch (error) {
+    throw new Error(`Failed to fetch product by id ${id}: ${error}`);
+  }
+};
