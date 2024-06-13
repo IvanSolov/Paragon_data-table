@@ -9,9 +9,7 @@ export const useProductStore = defineStore('product', {
   state: (): ProductState => ({
     currentProduct: null
   }),
-  getters: {
-    
-  },
+  getters: {},
   actions: {
     setCurrentProduct(product: Product) {
       this.currentProduct = product;
