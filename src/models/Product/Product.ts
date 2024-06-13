@@ -1,6 +1,6 @@
-import type { ProductServerType } from '@/types/api/product';
+import type { ProductServerType } from '@/services/apiServices/productService';
 
-// The product model is used to separate and transform untyped and uncontrolled server response data to a familiar data type. 
+// The product model is used to separate and transform untyped and uncontrolled server response data to a familiar data type.
 
 export class Product {
   id: number;
