@@ -28,7 +28,10 @@ import { ref, watchEffect } from 'vue';
 import { useRouter } from 'vue-router';
 import { useProductStore } from '@/stores/productStore';
 import { Product } from '@/models/Product/Product';
-import { fetchProducts, type ProductServerType } from '@/services/apiServices/productService';
+import {
+  fetchProducts,
+  type ProductServerType
+} from '@/services/apiServices/ProductApi/productService';
 
 const productStore = useProductStore();
 const router = useRouter();
