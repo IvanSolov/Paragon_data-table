@@ -2,7 +2,7 @@ import { defineStore } from 'pinia';
 import { Product } from '@/models/Product/Product';
 import { fetchProductById } from '@/services/apiServices/ProductApi/productService';
 
-interface ProductState {
+type ProductState = {
   currentProduct: Product | null;
   loading: boolean;
 }

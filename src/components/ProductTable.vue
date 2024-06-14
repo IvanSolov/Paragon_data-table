@@ -61,7 +61,7 @@ const fetchProductsFromApi = async (query = ''): Promise<void> => {
       itemsPerPage: itemsPerPage.value || itemsPerPageOptions[0]
     });
 
-    products.value = productList.map((product: ProductServerType) => new Product(product));
+    products.value = productList?.map((product: ProductServerType) => new Product(product));
     totalProducts.value = total;
   } catch (error) {
     console.error('Failed to fetch products:', error);

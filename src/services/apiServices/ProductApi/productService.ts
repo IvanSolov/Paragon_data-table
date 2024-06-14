@@ -45,8 +45,8 @@ export const fetchProducts = async ({
 
 export const fetchProductById = async (id: number): Promise<ProductServerType> => {
   try {
-    const response = await httpClient.get(`/products/${id}`);
-    return response.data;
+    const { data } = await httpClient.get(`/products/${id}`);
+    return data;
   } catch (error) {
     throw new Error(`Failed to fetch product by id ${id}: ${error}`);
   }
