@@ -5,7 +5,7 @@ import { fetchProductById } from '@/services/apiServices/ProductApi/productServi
 type ProductState = {
   currentProduct: Product | null;
   loading: boolean;
-}
+};
 
 export const useProductStore = defineStore('product', {
   state: (): ProductState => ({
