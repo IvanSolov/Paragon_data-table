@@ -41,9 +41,9 @@ const products = ref<Product[]>([]);
 const totalProducts = ref<number>(0);
 const currentPage = ref<number>(1);
 const loading = ref<boolean>(false);
-const itemsPerPage = ref<number>();
 const searchStr = ref<string>('');
 const itemsPerPageOptions = [20, 50, 100];
+const itemsPerPage = ref<number>(itemsPerPageOptions[0]);
 
 // todo: headers to common config
 const headers = [
