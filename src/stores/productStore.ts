@@ -21,7 +21,7 @@ export const useProductStore = defineStore('product', {
     },
     async loadProductById(id: number) {
       this.loading = true;
-      
+
       try {
         const productData = await fetchProductById(id);
         this.currentProduct = new Product(productData);
@@ -31,6 +31,6 @@ export const useProductStore = defineStore('product', {
       } finally {
         this.loading = false;
       }
-    },
+    }
   }
 });

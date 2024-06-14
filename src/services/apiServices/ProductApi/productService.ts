@@ -52,7 +52,10 @@ export const fetchProductById = async (id: number): Promise<ProductServerType> =
   }
 };
 
-const makeRequest = async (url: string, params: ProductRequestOptions): Promise<ProductsServerResponse> => {
+const makeRequest = async (
+  url: string,
+  params: ProductRequestOptions
+): Promise<ProductsServerResponse> => {
   try {
     const { data } = await httpClient.get(url, { params });
     return data;
