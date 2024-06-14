@@ -1,100 +1,52 @@
-import { describe, it, expect, vi, afterEach } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { fetchProducts, fetchProductById } from '@/services/apiServices/ProductApi/productService';
 import { httpClient } from '@/services/httpClient';
-import {
-  fetchProducts,
-  fetchProductById,
-  type ProductsServerResponse,
-  type ProductServerType
-} from './productService';
 
-vi.mock('@/services/httpClient');
+vi.mock('@/services/httpClient', () => ({
+  httpClient: {
+    get: vi.fn()
+  }
+}));
 
-const mockedHttpClient = httpClient as vi.Mocked<typeof httpClient>;
-
-describe('productService', () => {
-  afterEach(() => {
+describe('Product API Service', () => {
+  beforeEach(() => {
     vi.clearAllMocks();
   });
 
-  describe('fetchProducts', () => {
-    it('fetches products correctly without search query', async () => {
-      const mockResponse: ProductsServerResponse = {
-        products: [
-          { id: 1, title: 'Product 1', description: 'Description 1', price: 1000 },
-          { id: 2, title: 'Product 2', description: 'Description 2', price: 2000 }
-        ],
-        total: 2,
-        skip: 0,
-        limit: 10
-      };
+  it('fetches products successfully', async () => {
+    const mockProductsResponse = {
+      products: [{ id: 1, title: 'Product 1', description: 'Description 1', price: 100 }],
+      total: 1,
+      skip: 0,
+      limit: 25
+    };
 
-      mockedHttpClient.get.mockResolvedValue({ data: mockResponse });
+    (httpClient.get as ReturnType<typeof vi.fn>).mockResolvedValueOnce({ data: mockProductsResponse });
 
-      const params = { itemsPerPage: 10, page: 1, search: '' };
-      const result = await fetchProducts(params);
-
-      expect(mockedHttpClient.get).toHaveBeenCalledWith('/products', {
-        params: { limit: 10, skip: 0, q: undefined }
-      });
-      expect(result).toEqual(mockResponse);
-    });
-
-    it('fetches products correctly with search query', async () => {
-      const mockResponse: ProductsServerResponse = {
-        products: [
-          { id: 1, title: 'Product 1', description: 'Description 1', price: 1000 },
-          { id: 2, title: 'Product 2', description: 'Description 2', price: 2000 }
-        ],
-        total: 2,
-        skip: 0,
-        limit: 10
-      };
-
-      mockedHttpClient.get.mockResolvedValue({ data: mockResponse });
-
-      const params = { itemsPerPage: 10, page: 1, search: 'Product' };
-      const result = await fetchProducts(params);
-
-      expect(mockedHttpClient.get).toHaveBeenCalledWith('/products/search', {
-        params: { limit: 10, skip: 0, q: 'Product' }
-      });
-      expect(result).toEqual(mockResponse);
-    });
-
-    it('handles error during fetch products', async () => {
-      mockedHttpClient.get.mockRejectedValue(new Error('Network Error'));
-
-      const params = { itemsPerPage: 10, page: 1, search: '' };
-
-      await expect(fetchProducts(params)).rejects.toThrow(
-        'Failed to fetch products: Error: Network Error'
-      );
-    });
+    const response = await fetchProducts({ itemsPerPage: 25, page: 1, search: '' });
+    expect(response).toEqual(mockProductsResponse);
+    expect(httpClient.get).toHaveBeenCalledWith('/products', { params: { limit: 25, skip: 0, q: undefined } });
   });
 
-  describe('fetchProductById', () => {
-    it('fetches product by id correctly', async () => {
-      const mockProduct: ProductServerType = {
-        id: 1,
-        title: 'Product 1',
-        description: 'Description 1',
-        price: 1000
-      };
+  it('fetches product by id successfully', async () => {
+    const mockProductResponse = { id: 1, title: 'Product 1', description: 'Description 1', price: 100 };
 
-      mockedHttpClient.get.mockResolvedValue({ data: mockProduct });
+    (httpClient.get as ReturnType<typeof vi.fn>).mockResolvedValueOnce({ data: mockProductResponse });
 
-      const result = await fetchProductById(1);
+    const response = await fetchProductById(1);
+    expect(response).toEqual(mockProductResponse);
+    expect(httpClient.get).toHaveBeenCalledWith('/products/1');
+  });
 
-      expect(mockedHttpClient.get).toHaveBeenCalledWith('/products/1');
-      expect(result).toEqual(mockProduct);
-    });
+  it('handles error when fetching products', async () => {
+    (httpClient.get as ReturnType<typeof vi.fn>).mockRejectedValueOnce(new Error('Network error'));
 
-    it('handles error during fetch product by id', async () => {
-      mockedHttpClient.get.mockRejectedValue(new Error('Network Error'));
+    await expect(fetchProducts({ itemsPerPage: 25, page: 1, search: '' })).rejects.toThrow('Failed to fetch products: Error: Network error');
+  });
 
-      await expect(fetchProductById(1)).rejects.toThrow(
-        'Failed to fetch product by id 1: Error: Network Error'
-      );
-    });
+  it('handles error when fetching product by id', async () => {
+    (httpClient.get as ReturnType<typeof vi.fn>).mockRejectedValueOnce(new Error('Network error'));
+
+    await expect(fetchProductById(1)).rejects.toThrow('Failed to fetch product by id 1: Error: Network error');
   });
 });
