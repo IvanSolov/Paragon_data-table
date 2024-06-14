@@ -16,7 +16,7 @@
         class="mt-3 mx-3"
         @click="goBack"
       >
-        Назад
+        Go Back
       </v-btn>
       <v-card-title class="text-h6">{{ currentProduct.title }}</v-card-title>
       <v-card-text>
