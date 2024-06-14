@@ -21,11 +21,22 @@
         </tr>
       </template>
     </v-data-table-server>
+
+    <v-dialog v-model="errorDialogState.isOpen" max-width="600">
+      <v-card>
+        <v-card-title class="ml-2 mt-2">Woops!</v-card-title>
+        <v-card-text>{{ errorDialogState.message }}</v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="red darken-1" @click="errorDialogState.isOpen = false">Close</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-container>
 </template>
 
 <script setup lang="ts">
-import { ref, watchEffect } from 'vue';
+import { ref, watchEffect, reactive } from 'vue';
 import { useRouter } from 'vue-router';
 import { useProductStore } from '@/stores/productStore';
 import { Product } from '@/models/Product/Product';
@@ -46,6 +57,11 @@ const searchStr = ref<string>('');
 const itemsPerPageOptions = [20, 50, 100];
 const itemsPerPage = ref<number>(itemsPerPageOptions[0]);
 
+const errorDialogState = reactive({
+  isOpen: false,
+  message: ''
+});
+
 // todo: headers to common config
 const headers = [
   { title: 'Name', value: 'title' },
@@ -65,6 +81,8 @@ const fetchProductsFromApi = async (query = ''): Promise<void> => {
     products.value = productList?.map((product: ProductServerType) => new Product(product));
     totalProducts.value = total;
   } catch (error) {
+    errorDialogState.message = 'Failed to load products. Please try again later.';
+    errorDialogState.isOpen = true;
     console.error('Failed to fetch products:', error);
   } finally {
     loading.value = false;
