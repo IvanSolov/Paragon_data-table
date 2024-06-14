@@ -31,6 +31,7 @@
 import { computed, onUnmounted, ref, watch } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { useProductStore } from '@/stores/productStore';
+import { formatPrice } from '@/utils/priceFormatter';
 
 const productStore = useProductStore();
 const currentProduct = computed(() => productStore.currentProduct);
@@ -74,10 +75,6 @@ watch(
   },
   { immediate: true }
 );
-
-const formatPrice = (price: number): string => {
-  return `$${price.toFixed(2)}`;
-};
 
 const goBack = () => {
   router.back();

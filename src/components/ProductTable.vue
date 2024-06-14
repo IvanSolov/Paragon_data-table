@@ -33,6 +33,7 @@ import {
   fetchProducts,
   type ProductServerType
 } from '@/services/apiServices/ProductApi/productService';
+import { formatPrice } from '@/utils/priceFormatter';
 
 const productStore = useProductStore();
 const router = useRouter();
@@ -73,10 +74,6 @@ const fetchProductsFromApi = async (query = ''): Promise<void> => {
 const onProductClick = (product: Product) => {
   productStore.setCurrentProduct(product);
   router.push(`/product/${product.id}`);
-};
-
-const formatPrice = (price: number): string => {
-  return `$${price.toFixed(2)}`;
 };
 
 watchEffect(() => {
