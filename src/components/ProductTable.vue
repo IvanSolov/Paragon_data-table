@@ -22,16 +22,7 @@
       </template>
     </v-data-table-server>
 
-    <v-dialog v-model="errorDialogState.isOpen" max-width="600">
-      <v-card>
-        <v-card-title class="ml-2 mt-2">Woops!</v-card-title>
-        <v-card-text>{{ errorDialogState.message }}</v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="red darken-1" @click="errorDialogState.isOpen = false">Close</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
+    <ErrorDialog v-model:isOpen="errorDialogState.isOpen" :message="errorDialogState.message" />
   </v-container>
 </template>
 
@@ -40,11 +31,10 @@ import { ref, watchEffect, reactive } from 'vue';
 import { useRouter } from 'vue-router';
 import { useProductStore } from '@/stores/productStore';
 import { Product } from '@/models/Product/Product';
-import {
-  fetchProducts,
-  type ProductServerType
-} from '@/services/apiServices/ProductApi/productService';
+import { fetchProducts } from '@/services/apiServices/ProductApi/productService';
 import { formatPrice } from '@/utils/priceFormatter';
+import ErrorDialog from './ErrorDialog.vue';
+import type { ProductServerType } from '@/services/apiServices/ProductApi/types';
 
 const productStore = useProductStore();
 const router = useRouter();
