@@ -3,6 +3,7 @@
     <v-data-table-server
       v-model:items-per-page="itemsPerPage"
       v-model:page="currentPage"
+      :items-per-page-options="itemsPerPageOptions"
       :headers="headers"
       :items="products"
       :items-length="totalProducts"
@@ -42,6 +43,7 @@ const currentPage = ref<number>(1);
 const loading = ref<boolean>(false);
 const itemsPerPage = ref<number>();
 const searchStr = ref<string>('');
+const itemsPerPageOptions = [20, 50, 100];
 
 // todo: headers to common config
 const headers = [
@@ -56,7 +58,7 @@ const fetchProductsFromApi = async (query = ''): Promise<void> => {
     const { products: productList, total } = await fetchProducts({
       search: query || searchStr.value,
       page: currentPage.value || 1,
-      itemsPerPage: itemsPerPage.value || 25
+      itemsPerPage: itemsPerPage.value || itemsPerPageOptions[0]
     });
 
     products.value = productList.map((product: ProductServerType) => new Product(product));
