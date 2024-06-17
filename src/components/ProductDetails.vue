@@ -57,14 +57,16 @@ const loadProduct = async (id: number) => {
   } catch (error: any) {
     toast.value = {
       visible: true,
-      message: error?.message || 'Failed to load product',
+      message: `Failed to load product ${id}`,
       color: 'error'
     };
-    console.error('Failed to fetch product:', error);
+    console.error('Failed to fetch product:', error?.message);
+
+    const timeUntilReturn = toastDelayTime + 1000;
 
     setTimeout(() => {
       router.push('/');
-    }, toastDelayTime + 1000);
+    }, timeUntilReturn);
   }
 };
 
