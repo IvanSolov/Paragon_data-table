@@ -35,6 +35,7 @@ import { fetchProducts } from '@/services/apiServices/ProductApi/productService'
 import { formatPrice } from '@/utils/priceFormatter';
 import ErrorDialog from './ErrorDialog.vue';
 import type { ProductServerType } from '@/services/apiServices/ProductApi/types';
+import { tableConfings } from '@/configs/tableConfigs';
 
 const productStore = useProductStore();
 const router = useRouter();
@@ -52,12 +53,7 @@ const errorDialogState = reactive({
   message: ''
 });
 
-// todo: headers to common config
-const headers = [
-  { title: 'Name', value: 'title' },
-  { title: 'Description', value: 'description' },
-  { title: 'Price', value: 'price' }
-];
+const headers = tableConfings.headers;
 
 const fetchProductsFromApi = async (query = ''): Promise<void> => {
   loading.value = true;
