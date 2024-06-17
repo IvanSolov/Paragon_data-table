@@ -5,5 +5,5 @@ const tableHeaders = [
 ];
 
 export const tableConfings = {
-    headers: tableHeaders,
-}
+  headers: tableHeaders
+};
